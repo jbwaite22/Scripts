@@ -1,0 +1,8 @@
+USE [database];
+GO
+ALTER DATABASE [database] SET RECOVERY SIMPLE;
+GO
+DBCC SHRINKFILE ([database]_Log, 10); --10MB
+GO
+ALTER DATABASE [database] SET RECOVERY FULL;
+GO
