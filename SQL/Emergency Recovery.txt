@@ -1,8 +1,27 @@
+/* Emergency Recovery (Remove the [] as well when entering information)*/
+/* Sets database to single user mode - needed for recovery */
+ALTER DATABASE [database] SET SINGLE_USER;
+GO
+/* Initiates the recovery */
+DBCC CHECKDB ([database],REPAIR_REBUILD) WITH NO_INFOMSGS,ALL_ERRORMSGS;
+GO
+/* Sets database back online after recovery */
+ALTER DATABASE [database] SET ONLINE;
+GO
+/* Sets database back to multi-user */
+ALTER DATABASE [database] SET MULTI_USER;
+GO
+
+/* !!! Purge Log File !!! --- !!! Do NOT use unless needed, will DELETE logs !!! */
+/* Select Database */
 USE [database];
 GO
+/* Set the recovery mode */
 ALTER DATABASE [database] SET RECOVERY SIMPLE;
 GO
+/* Shrink the log file */
 DBCC SHRINKFILE ([database]_Log, 10); --10MB
 GO
+/* Set Database to full recovery */
 ALTER DATABASE [database] SET RECOVERY FULL;
 GO
