@@ -1,0 +1,13 @@
+/* Database must be set to full recovery model  */
+/* Sets the restore point of the new database */
+RESTORE DATABASE [New Database Name]
+
+/* Loads the backup target for restore */
+FROM DISK = '[Full path and name of .bak file]'
+
+/* Export file paths */
+WITH
+MOVE '[PreviousDatabase]' TO '[New DB full path.mdf]',
+MOVE '[PreviousDatabase_log]' TO '[New Log full path.ldf]',
+NORECOVERY
+GO
