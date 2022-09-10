@@ -15,11 +15,11 @@ foreach ($User in $Users)
     $UPN = $SAM + "@contoso.com"
     $EMAIL = $UPN"
     $Password = $User.Password
-    $Path = "[User Folder parent location]\$SAM"
+    $Path = "[User Folder parent location(SMB Server/Share Address)]\$SAM"
     $ACLUser = New-Object System.Security.Principal.NTAccount ($SAM)
     $ACLAdmin = New-Object System.Security.AccessControl.FileSystemAccessRule ("BUILTIN\Administrators","FullControl”,”ContainerInherit,ObjectInherit”,”None”,”Allow")
     $ACLOwn = New-Object System.Security.AccessControl.FileSystemAccessRule ("$ACLUser", "FullControl”,”ContainerInherit,ObjectInherit”,”None”,”Allow")
-    $ACLDAdmin = New-Object System.Security.AccessControl.FileSystemAccessRule ("MHL\Domain Admins","FullControl”,”ContainerInherit,ObjectInherit”,”None”,”Allow")
+    $ACLDAdmin = New-Object System.Security.AccessControl.FileSystemAccessRule ("DomainName\Domain Admins","FullControl”,”ContainerInherit,ObjectInherit”,”None”,”Allow")
     $ACLSYS = New-Object System.Security.AccessControl.FileSystemAccessRule ("SYSTEM","FullControl”,”ContainerInherit,ObjectInherit”,”None”,”Allow")
 
     #Creation of the account with the requested formatting:
@@ -30,13 +30,13 @@ foreach ($User in $Users)
 
     #Create User Folders:
     New-Item -ItemType Directory -Path "$Path" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Desktop" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Documents" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Videos" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Favorites" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Music" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\Pictures" | Out-Null
-          #New-Item -ItemType Directory -Path "$Path\History" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Desktop" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Documents" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Videos" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Favorites" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Music" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\Pictures" | Out-Null
+          New-Item -ItemType Directory -Path "$Path\History" | Out-Null
       
     #Create Folder Permissions:
     #Set Main User Directory Permissions and Ownership.
