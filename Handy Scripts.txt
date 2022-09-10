@@ -1,0 +1,28 @@
+##MS SharePoint Connect:
+
+$adminUPN="user@contoso.com"
+$orgName="tennantname"
+$userCredential = Get-Credential -UserName $adminUPN -Message "Type the password."
+Connect-SPOService -Url https://$orgName-admin.sharepoint.com -Credential $userCredential
+
+##Seed OneDrive:
+
+$users = Get-Content -path "[File Path]\OneDrive\Users.txt"
+Request-SPOPersonalSite -UserEmails $users
+
+##Get Users - Will export user info to specified path
+
+Get-ADUser -Filter * -SearchBase "OU=Staff,dc=contoso,dc=com" -ResultPageSize 0 -Prop CN,samaccountname,lastLogonTime | Select CN,samaccountname,@{n="lastLogonDate";e={[datetime]::FromFileTime  
+($_.lastLogonTimestamp)}} | Export-CSV -NoType [File Path]\UserList.csv
+
+##Password Reset:
+
+$UserFile = Import-csv -Path "[File Path]\UserWithPass.CSV"
+Foreach ($AllItems in $UserFile)
+{
+$SamAccountName = $AllItems.SamAccountName
+$ThisPassword = $AllItems.Password
+Set-ADAccountPassword –Identity $SamAccountName –Reset –NewPassword (ConvertTo-SecureString -AsPlainText "$ThisPassword" -Force)
+Set-ADUser -Identity $SamAccountName -ChangePasswordAtLogon $true
+"$SamAccountName Complete"
+}
